@@ -1,0 +1,42 @@
+use std::io::{self, Write};
+use std::collections::HashMap;
+
+fn picking_numbers(a: Vec<i32>) -> i32 {
+    let mut freq = HashMap::new();
+    
+    for &num in &a {
+        *freq.entry(num).or_insert(0) += 1;
+    }
+    
+    let mut max_count = 0;
+    
+   
+    for (&key, &value) in &freq {
+        let adjacent_count = value + freq.get(&(key + 1)).unwrap_or(&0);
+        max_count = max_count.max(adjacent_count);
+    }
+    
+    max_count
+}
+
+fn main() {
+   
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).unwrap();
+    let _n: usize = input.trim().parse().unwrap(); // Не обов'язково зберігати n
+
+    input.clear();
+    io::stdin().read_line(&mut input).unwrap();
+    let a: Vec<i32> = input
+        .trim()
+        .split_whitespace()
+        .map(|s| s.parse().unwrap())
+        .collect();
+
+    let result = picking_numbers(a);
+
+    
+    let stdout = io::stdout();
+    let mut handle = stdout.lock();
+    writeln!(handle, "{}", result).unwrap();
+}
